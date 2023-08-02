@@ -1,0 +1,3 @@
+function sendCommand(){
+    alert('click');
+}

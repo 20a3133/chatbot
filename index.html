@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <!--タイトル、スタイルシート読み込み-->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Writing System</title>
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css" />
+        <link rel="stylesheet" href="index.css" />
+    </head>
+    <body>
+        <header class="header">
+            <!-- <h1>チャット</h1> -->
+        </header>
+        <section class="content">
+            <!--処理結果表示部-->
+        </section>
+        <footer class="footer">
+            <!--コマンド入力・送信部-->
+            <input
+                id="msg-send"
+                class="msg-input"
+                type="text"
+                placeholder="コマンド(Shift+Enterで送信)"
+            />
+            <button class="btn-submit" type="button" onclick="sendCommand()">
+            送信
+            </button>
+        </footer>
+        <script src="index.js"></script>
+    </body>
+</html>
