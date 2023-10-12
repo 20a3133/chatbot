@@ -10,18 +10,21 @@
         <link rel="stylesheet" href="index.css" />
     </head>
     <body>
-        <header class="header">
-            <!-- <h1>チャット</h1> -->
+        <!-- <header class="header">
+            <h1>チャット</h1>
         </header>
         <section class="content">
-            <!--処理結果表示部-->
-        </section>
+            処理結果表示部
+        </section> -->
+        <div id="output"></div>
         <footer class="footer">
             <!--コマンド入力・送信部-->
             <input
+                name="msg"
                 id="msg-send"
                 class="msg-input"
                 type="text"
+                value=""
                 placeholder="コマンド(Shift+Enterで送信)"
             />
             <button class="btn-submit" type="button" onclick="sendCommand()">
