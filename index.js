@@ -124,6 +124,8 @@ text_name.addEventListener('focus', function(){
 });
 
 text_name.addEventListener('blur', function(){
+    focus_id = "";
+    subfocus_id = "";
     flag = false;
 });
 
@@ -157,9 +159,9 @@ function keydownEvent(event){
     }
 
     //フォーカス要素の取得
-    if(event.altKey && event.code === 'KeyG'){
+    /*if(event.altKey && event.code === 'KeyG'){
         getItem();
-    }
+    }*/
 
     if(event.altKey && event.code === 'KeyS'){
         focus_id = "";
