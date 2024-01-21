@@ -2,7 +2,7 @@
 var count = 0;
 //focusされた要素とspanのid
 var focus_id, subfocus_id;
-var fontSize, defalt = 15, fontColor;
+var fontSize, fs_defalt, fontColor, fc_defalt = "black";
 var flag = false, change = false;
 const canvas = document.getElementById("canvas")
 const context = canvas.getContext("2d");
@@ -21,7 +21,9 @@ window.onload = function(){
     canvas.setAttribute("width", w);
     canvas.setAttribute("height", h);
     canvas.setAttribute("position", "absolute");
-    fontSize = defalt;
+    fs_defalt =  window.getComputedStyle(document.documentElement).getPropertyValue('font-size');
+    fontSize = fs_defalt;
+    fontColor = fc_defalt;
     document.getElementById("msg-send").focus();
 }
 
@@ -113,33 +115,31 @@ function inputWidthAdjust(textBox, dummyTextBox){
     textBox.style.width = dummyTextBox.clientWidth + 'px';
 }
 
-text_name.addEventListener('focus', function(){
-    focus_id = document.activeElement.id;
-        
-    if(!String(focus_id).indexOf("txt")){
-        subfocus_id = "span" + focus_id.replace(/[^0-9]/g, '');
-    }
-    alert("現在取得したID\n"+ focus_id);
-    flag = true;
-});
+function fcsFunc(){
+    getItem();
+}
 
-text_name.addEventListener('blur', function(){
+function blurFunc(){
     focus_id = "";
     subfocus_id = "";
     flag = false;
-});
+}
 
 function keydownEvent(event){
     if(event.shiftKey){
         //要素の削除
         if(flag && event.key === 'Backspace'){
-            document.activeElement.blur();
-            const text = document.getElementById(focus_id);
-            if(String(text).indexOf("txt")){
-                const sub_text = document.getElementById(subfocus_id);
-                sub_text.remove();
+            //focus_id = document.activeElement.id;
+            var text = document.getElementById(focus_id);
+            var sub_text;
+            if(!String(focus_id).indexOf("txt")){
+                //subfocus_id = "span" + focus_id.replace(/[^0-9]/g, '');
+                sub_text = document.getElementById(subfocus_id);
             }
+
+            sub_text.remove();
             text.remove();
+            document.activeElement.blur();
             if(change){
                 CanvasClear();
             }
@@ -171,15 +171,26 @@ function keydownEvent(event){
 
     //モードチェンジ
     if(event.altKey && event.code === 'KeyC'){
-        var target = document.querySelector('.sentence');
+        
+        //var target = document.querySelector('.sentence');
         //canvasモードに変更
         if(change) {
             change = false;
-            target.disabled = false;
+            var inputItem = document.getElementById("output").getElementsByTagName("input");
+ 
+            for(var i=0; i<inputItem.length; i++){
+                inputItem[i].disabled = false;
+            }
+            //target.disabled = false;
         }
         else{
             change = true;
-            target.disabled = true;
+            var inputItem = document.getElementById("output").getElementsByTagName("input");
+ 
+            for(var i=0; i<inputItem.length; i++){
+                inputItem[i].disabled = true;
+            }
+            //target.disabled = true;
         }
     }
 
@@ -224,31 +235,88 @@ function sendCommand(){
     var command = result[0];
 
     //コマンド
+    var x = 0, y = 0, fs = fontSize, fc = fontColor;
     //テキストボックス作成
     if(command=="crtxt") {
-        if(result[1] == null) CreateTextBox(0, 0, 0);
-        else if(result[3] == null) {
-            fontSize = defalt;
-            CreateTextBox(result[1], result[2], fontSize);
-        }else{
-            if(result[3] == "fs"){
-                fontSize = result[4];
-                CreateTextBox(result[1], result[2], fontSize);
+        if(result[1] == null) CreateTextBox(x, y, fontSize, fontColor);
+        else{
+            if(result[1] == "fs"){
+                //crtxt fs~ のとき
+                fs = result[2];
+                if(result[3] == null){
+                    x = 0;
+                    y = 0;
+                    fc = fontColor;
+                }else if(result[3] == "fc"){
+                    fc = result[4];
+                    if(result[5] != null){
+                        x = result[5];
+                        y = result[6];
+                    }
+                }else if(result[3] != "fc"){
+                    x = result[3];
+                    y = result[4];
+                    if(result[5] != null){
+                        fc = result[6];
+                    } 
+                }
+            }else if(result[1] == "fc"){
+                //crtxt fc ~
+                fc = result[2];
+                if(result[3] == null){
+                    x = 0;
+                    y = 0;
+                    fs = fontSize;
+                }
+                else if(result[3] == "fs"){
+                    fs = result[4];
+                    if(result[5] != null){
+                        x = result[5];
+                        y = result[6];
+                    }
+                }else if(result[3] != "fs"){
+                    x = result[3];
+                    y = result[4];
+                    if(result[5] != null){
+                        fs = result[6];
+                    }
+                }
+            }else{
+                //crtxt x y ~
+                x = result[1];
+                y = result[2];
+                if(result[3] == "fs"){
+                    fs = result[4];
+                    if(result[5] != null){
+                        fc = result[6];
+                    }
+                }else if(result[3] == "fc"){
+                    fc = result[4];
+                    if(result[5] != null){
+                        fs = result[6];
+                    }
+                }else{
+                    fc = fontColor;
+                    fs = fontSize;
+                }
             }
+            CreateTextBox(x, y, fs, fc);
         }
     }else if(command == "fs"){
         //フォントサイズ一括指定
         fontSize = result[1];
         movefooter();
-    }else if(command == "fsdefalt"){
-        //フォントサイズ初期に戻す
-        fontSize = defalt;
+    }else if(command == "defalt"){
+        if(result[1] == "fs"){
+            //フォントサイズ初期に戻す
+            fontSize = fs_defalt;
+        }else if(result[1] == "fc"){
+            //フォントの色初期に戻す
+            fontColor = fc_defalt;
+        }
         movefooter();
     }else if(command == "fc"){
         fontColor = result[1];
-        movefooter();
-    }else if(command == "fcdefalt"){
-        fontColor = "black";
         movefooter();
     }
     //座標指定でテキストボックス移動
@@ -299,7 +367,7 @@ function CanvasClear(){
 }
 
 //テキストボックスの作成
-function CreateTextBox(x, y, fontsize){
+function CreateTextBox(x, y, fontsize, fontcolor){
     //alert('click');
     count += 1;
     const cftdiv = document.getElementById("output");
@@ -318,7 +386,10 @@ function CreateTextBox(x, y, fontsize){
     // classを設定
     ipt.setAttribute("class", "sentence");
 
-    //ipt.setAttribute("overflow", "hidden");
+    // 要素へonFocus属性を設定する
+    ipt.setAttribute('onFocus', `fcsFunc()`);
+    // 要素へonBlur属性を設定する
+    ipt.setAttribute("onBlur", `blurFunc()`);
 
     //span
     //idを指定
@@ -334,14 +405,14 @@ function CreateTextBox(x, y, fontsize){
 
     //フォントサイズの設定(入力しないと変化しない)
     if(fontsize == 0){
-        fontsize = defalt;
+        fontsize = fs_defalt;
     }
     ipt.style.fontSize = fontsize+"px";
     dummyipt.style.fontSize = fontsize+"px";
 
     //フォントカラーの設定(入力しないと黒)
-    ipt.style.color = fontColor;
-    dummyipt.style.color = fontColor;
+    ipt.style.color = fontcolor;
+    dummyipt.style.color = fontcolor;
     //親ノードの子ノードリストの末尾にノードを追加
     cftdiv.appendChild(ipt);
     cftdiv.appendChild(dummyipt);
