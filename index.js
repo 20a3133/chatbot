@@ -2,7 +2,7 @@
 var count = 0;
 //focusされた要素とspanのid
 var focus_id, subfocus_id;
-var fontSize, fs_defalt, fontColor, fc_defalt = "black";
+var fontSize, fs_defalt, fontColor, fc_defalt;
 var flag = false, change = false;
 const canvas = document.getElementById("canvas")
 const context = canvas.getContext("2d");
@@ -23,6 +23,7 @@ window.onload = function(){
     canvas.setAttribute("position", "absolute");
     fs_defalt =  window.getComputedStyle(document.documentElement).getPropertyValue('font-size');
     fontSize = fs_defalt;
+    fc_defalt =  window.getComputedStyle(document.documentElement).getPropertyValue('font-color');
     fontColor = fc_defalt;
     document.getElementById("msg-send").focus();
 }
