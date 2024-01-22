@@ -35,8 +35,6 @@ window.onresize = function(){
     canvas.setAttribute("height", h);
 }
 
-
-
 //キーイベント
 document.addEventListener('keydown', keydownEvent,false);
 
@@ -97,7 +95,6 @@ document.addEventListener('mouseup', function(){
         }
         
         //マウスボタンが離された
-        //context.closePath();
         stx = null, sty = null, x = null, y = null;
         mousedown = false;
     }
@@ -129,11 +126,9 @@ function keydownEvent(event){
     if(event.shiftKey){
         //要素の削除
         if(flag && event.key === 'Backspace'){
-            //focus_id = document.activeElement.id;
             var text = document.getElementById(focus_id);
             var sub_text;
             if(!String(focus_id).indexOf("txt")){
-                //subfocus_id = "span" + focus_id.replace(/[^0-9]/g, '');
                 sub_text = document.getElementById(subfocus_id);
             }
 
@@ -158,11 +153,6 @@ function keydownEvent(event){
         movefooter();
     }
 
-    //フォーカス要素の取得
-    /*if(event.altKey && event.code === 'KeyG'){
-        getItem();
-    }*/
-
     if(event.altKey && event.code === 'KeyS'){
         focus_id = "";
         subfocus_id = "";
@@ -171,8 +161,7 @@ function keydownEvent(event){
 
     //モードチェンジ
     if(event.altKey && event.code === 'KeyC'){
-        
-        //var target = document.querySelector('.sentence');
+
         //canvasモードに変更
         if(change) {
             change = false;
@@ -181,7 +170,6 @@ function keydownEvent(event){
             for(var i=0; i<inputItem.length; i++){
                 inputItem[i].disabled = false;
             }
-            //target.disabled = false;
         }
         else{
             change = true;
@@ -190,7 +178,6 @@ function keydownEvent(event){
             for(var i=0; i<inputItem.length; i++){
                 inputItem[i].disabled = true;
             }
-            //target.disabled = true;
         }
     }
 
@@ -215,7 +202,6 @@ function getItem(){
     focus_id = document.activeElement.id;
     if(!String(focus_id).indexOf("txt")){
         subfocus_id = "span" + focus_id.replace(/[^0-9]/g, '');
-        //alert("現在取得したID\n" + focus_id + ", " + subfocus_id);
     }
     flag = true;
 }
@@ -368,7 +354,6 @@ function CanvasClear(){
 
 //テキストボックスの作成
 function CreateTextBox(x, y, fontsize, fontcolor){
-    //alert('click');
     count += 1;
     const cftdiv = document.getElementById("output");
     const ipt = document.createElement("input");
