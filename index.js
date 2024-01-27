@@ -16,6 +16,12 @@ var w, h;
 
 //読み込まれた時の処理
 window.onload = function(){
+    //outputの高さ
+    let elem = document.getElementById("output");
+    let wh = window.innerHeight;
+    elem.style.height = wh*0.88 + "px";
+
+    //canvasの大きさ
     w = document.getElementById("output").clientWidth;
     h = document.getElementById("output").clientHeight;
     canvas.setAttribute("width", w);
@@ -30,6 +36,11 @@ window.onload = function(){
 
 //ウィンドウサイズが変わったとき
 window.onresize = function(){
+    //outputの高さ
+    let elem = document.getElementById("output");
+    let wh = window.innerHeight;
+    elem.style.height = wh*0.88 + "px";
+    
     w = document.getElementById("output").clientWidth;
     h = document.getElementById("output").clientHeight;
     canvas.setAttribute("width", w);
@@ -212,6 +223,9 @@ function movefooter(){
     document.getElementById("msg-send").value = "";
 }
 
+function subWindow(){
+    window.open("subwin.html", "_blank", 'width=400,height=200,menubar=no,');
+}
 //コマンド解析
 function sendCommand(){
     //入力された文字の取得
@@ -305,6 +319,8 @@ function sendCommand(){
     }else if(command == "fc"){
         fontColor = result[1];
         movefooter();
+    }else if(command == "help"){
+        subWindow();
     }
     //座標指定でテキストボックス移動
     else if(flag && command=="mvtxt") MoveTextBox(result[1], result[2]);
